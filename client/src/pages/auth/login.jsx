@@ -5,6 +5,7 @@ import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   email: "",
@@ -15,22 +16,28 @@ function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const navigate = useNavigate(); // Add this
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
 
-    dispatch(loginUser(formData)).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: data?.payload?.message,
-        });
+    const result = await dispatch(loginUser(formData));
+    if (result?.payload?.success) {
+      toast({
+        title: result.payload.message,
+      });
+      // Navigate based on user role
+      if (result.payload.user.role === "admin") {
+        navigate("/admin/dashboard");
       } else {
-        toast({
-          title: data?.payload?.message,
-          variant: "destructive",
-        });
+        navigate("/shop/home");
       }
-    });
+    } else {
+      toast({
+        title: result?.payload?.message,
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -56,8 +63,15 @@ function AuthLogin() {
         setFormData={setFormData}
         onSubmit={onSubmit}
       />
+      <div className="text-center">
+        <Link
+          to="/auth/forgot-password"
+          className="text-sm text-primary hover:underline"
+        >
+          Forgot your password?
+        </Link>
+      </div>
     </div>
-  );
-}
+  )};
 
 export default AuthLogin;

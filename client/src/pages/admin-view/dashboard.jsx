@@ -14,15 +14,25 @@ function AdminDashboard() {
   console.log(uploadedImageUrl, "uploadedImageUrl");
 
   function handleUploadFeatureImage() {
-    dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(getFeatureImages());
-        setImageFile(null);
-        setUploadedImageUrl("");
-      }
-    });
+    if (!uploadedImageUrl) {
+      console.error("No image URL available");
+      return;
+    }
+  
+    dispatch(addFeatureImage(uploadedImageUrl))
+      .then((data) => {
+        if (data?.payload?.success) {
+          dispatch(getFeatureImages());
+          setImageFile(null);
+          setUploadedImageUrl("");
+        } else {
+          console.error("Failed to add feature image:", data?.payload?.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding feature image:", error);
+      });
   }
-
   useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch]);

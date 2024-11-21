@@ -1,7 +1,10 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
 const adminOrderRouter = require("./routes/admin/order-routes");
@@ -14,18 +17,30 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
+// Add after line 61
+const sendEmail = require('./utils/sendEmail');
+
+// Test email configuration
+sendEmail({
+  email: process.env.EMAIL_USER,
+  subject: 'Test Email',
+  message: 'This is a test email'
+}).then(result => {
+  console.log('Email test result:', result);
+}).catch(err => {
+  console.error('Email test error:', err);
+});
 
 //create a database connection -> u can also
 //create a separate file for this and then import/use that file here
 
 mongoose
-  .connect("db_url")
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log(error));
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
+const PORT = process.env.PORT || 5001;
 app.use(
   cors({
     origin: "http://localhost:5173",

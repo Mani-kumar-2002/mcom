@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import AuthLayout from "./components/auth/layout";
 import AuthLogin from "./pages/auth/login";
 import AuthRegister from "./pages/auth/register";
@@ -22,6 +22,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import ForgotPassword from "./pages/auth/forgot-password";
+import ResetPassword from "./pages/auth/reset-password";
+
+
+
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -46,20 +51,15 @@ function App() {
             <CheckAuth
               isAuthenticated={isAuthenticated}
               user={user}
-            ></CheckAuth>
+            > <Navigate to="/shop/home" replace /></CheckAuth>
           }
         />
-        <Route
-          path="/auth"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AuthLayout />
-            </CheckAuth>
-          }
-        >
-          <Route path="login" element={<AuthLogin />} />
-          <Route path="register" element={<AuthRegister />} />
-        </Route>
+        <Route path="/auth" element={<AuthLayout />}>
+  <Route path="login" element={<AuthLogin />} />
+  <Route path="register" element={<AuthRegister />} />
+  <Route path="forgot-password" element={<ForgotPassword />} />
+  <Route path="reset-password/:token" element={<ResetPassword />} />
+</Route>
         <Route
           path="/admin"
           element={
