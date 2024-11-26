@@ -50,6 +50,8 @@ function ProductImageUpload({
       setImageLoadingState(true);
       const data = new FormData();
       data.append("my_file", imageFile);
+
+      console.log("line 54 withut error")
       
       const response = await axios.post(
         "http://localhost:5001/api/admin/products/upload-image",
@@ -60,6 +62,9 @@ function ProductImageUpload({
           }
         }
       );
+
+      console.log("response got successfully")
+      console.log(response)
   
       if (response?.data?.success) {
         setUploadedImageUrl(response.data.result.url);

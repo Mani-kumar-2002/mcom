@@ -11,9 +11,11 @@ cloudinary.config({
 const storage = new multer.memoryStorage();
 
 async function imageUploadUtil(file) {
+  console.log("sbfsbhsfgds maniki gaand maaro")
   const result = await cloudinary.uploader.upload(file, {
     resource_type: "auto",
   });
+  console.log("sbfsbhsfgds maniki gaand maaro successfull")
 
   return result;
 }
