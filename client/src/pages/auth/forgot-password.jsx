@@ -12,13 +12,13 @@ function ForgotPassword() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/auth/forgot-password",
+        "https://mcom-backend.onrender.com/api/auth/forgot-password",
         { email }
       );
-      
+
       if (response.data.success) {
         toast({
           title: "Success",

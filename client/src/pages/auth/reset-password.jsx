@@ -27,10 +27,10 @@ function ResetPassword() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/auth/reset-password/${token}`,
+        `https://mcom-backend.onrender.com/api/auth/reset-password/${token}`,
         { password }
       );
-      
+
       if (response.data.success) {
         toast({
           title: "Success",
