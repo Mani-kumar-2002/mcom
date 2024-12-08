@@ -12,6 +12,7 @@ function ResetPassword() {
   const { toast } = useToast();
   const { token } = useParams();
   const appUrl = process.env.REACT_APP_API_URL;
+  console.log(appUrl);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
