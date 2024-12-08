@@ -45,7 +45,8 @@ app.use(
   cors({
     origin: [
       "https://mcom-backend.onrender.com",
-      "https://mcom.onrender.com"
+      "https://mcom.onrender.com",
+      "http://localhost:5173"
     ],
     methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     allowedHeaders: [
