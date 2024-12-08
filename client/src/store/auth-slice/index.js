@@ -11,8 +11,9 @@ export const registerUser = createAsyncThunk(
   "/auth/register",
 
   async (formData) => {
+    const appUrl = process.env.REACT_APP_API_URL;
     const response = await axios.post(
-      "https://mcom-backend.onrender.com/api/auth/register",
+      `${appUrl}/api/auth/register`,
       formData,
       {
         withCredentials: true,

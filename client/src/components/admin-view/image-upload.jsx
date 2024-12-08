@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { Skeleton } from "../ui/skeleton";
 
+
 function ProductImageUpload({
   imageFile,
   setImageFile,
@@ -17,6 +18,7 @@ function ProductImageUpload({
   isCustomStyling = false,
 }) {
   const inputRef = useRef(null);
+  const appUrl = process.env.REACT_APP_API_URL;
 
   console.log(isEditMode, "isEditMode");
 
@@ -54,7 +56,7 @@ function ProductImageUpload({
       console.log("line 54 withut error")
 
       const response = await axios.post(
-        "https://mcom-backend.onrender.com/api/admin/products/upload-image",
+        `${appUrl}/api/admin/products/upload-image`,
         data,
         {
           headers: {

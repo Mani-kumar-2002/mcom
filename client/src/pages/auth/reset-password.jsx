@@ -11,6 +11,7 @@ function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { token } = useParams();
+  const appUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -27,7 +28,7 @@ function ResetPassword() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `https://mcom-backend.onrender.com/api/auth/reset-password/${token}`,
+        `${appUrl}/api/auth/reset-password/${token}`,
         { password }
       );
 
