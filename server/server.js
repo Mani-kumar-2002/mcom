@@ -43,8 +43,11 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 app.use(
   cors({
-    origin: "https://mcom-backend.onrender.com",
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    origin: [
+      "https://mcom-backend.onrender.com",
+      "https://mcom.onrender.com"
+    ],
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
