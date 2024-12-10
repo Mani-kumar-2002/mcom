@@ -40,14 +40,14 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5001;
 app.use(
   cors({
     origin: [
       "https://mcom-backend.onrender.com",
       "https://mcom.onrender.com",
       "http://localhost:5173",
-      "http://localhost:5002"
+      "http://localhost:5001"
     ],
     methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     allowedHeaders: [
