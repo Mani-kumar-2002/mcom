@@ -11,36 +11,30 @@ function AdminDashboard() {
   const dispatch = useDispatch();
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  console.log(uploadedImageUrl, "uploadedImageUrl");
+  const bannerImages = [
+    "/assets/banner-1.webp",
+    "/assets/banner-2.webp",
+    "/assets/banner-3.webp",
+    "/assets/account.jpg",
+  ];
 
   function handleUploadFeatureImage() {
-    if (!uploadedImageUrl) {
-      console.error("No image URL available");
-      return;
-    }
-  
-    dispatch(addFeatureImage(uploadedImageUrl))
-      .then((data) => {
-        if (data?.payload?.success) {
-          dispatch(getFeatureImages());
-          setImageFile(null);
-          setUploadedImageUrl("");
-        } else {
-          console.error("Failed to add feature image:", data?.payload?.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding feature image:", error);
-      });
+    dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getFeatureImages());
+        setImageFile(null);
+        setUploadedImageUrl("");
+      }
+    });
   }
+
   useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
-  console.log(featureImageList, "featureImageList");
-
   return (
     <div>
+      {/* Image Upload Section */}
       <ProductImageUpload
         imageFile={imageFile}
         setImageFile={setImageFile}
@@ -49,22 +43,42 @@ function AdminDashboard() {
         setImageLoadingState={setImageLoadingState}
         imageLoadingState={imageLoadingState}
         isCustomStyling={true}
-        // isEditMode={currentEditedId !== null}
       />
       <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
         Upload
       </Button>
-      <div className="flex flex-col gap-4 mt-5">
-        {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((featureImgItem) => (
-              <div className="relative">
-                <img
-                  src={featureImgItem.image}
-                  className="w-full h-[300px] object-cover rounded-t-lg"
-                />
-              </div>
-            ))
-          : null}
+
+      {/* Banner Display Section */}
+      <div className="mt-5">
+        <h2 className="text-xl font-bold mb-3">Banners</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {bannerImages.map((banner, index) => (
+            <img
+              key={index}
+              src={banner}
+              alt={`Banner ${index + 1}`}
+              className="w-full h-[200px] object-cover rounded-lg"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Feature Image Display Section */}
+      <div className="mt-10">
+        <h2 className="text-xl font-bold mb-3">Feature Images</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {featureImageList && featureImageList.length > 0
+            ? featureImageList.map((featureImgItem, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={featureImgItem.image}
+                    alt={`Feature Image ${index + 1}`}
+                    className="w-full h-[300px] object-cover rounded-lg"
+                  />
+                </div>
+              ))
+            : <p>No feature images available.</p>}
+        </div>
       </div>
     </div>
   );

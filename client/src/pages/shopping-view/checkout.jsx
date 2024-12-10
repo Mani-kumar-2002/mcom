@@ -3,7 +3,7 @@ import img from "../../assets/account.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { Navigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,40 +13,37 @@ function ShoppingCheckout() {
   const { user } = useSelector((state) => state.auth);
   const { approvalURL } = useSelector((state) => state.shopOrder);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
-  const [isPaymentStart, setIsPaymemntStart] = useState(false);
+  const [isPaymentStart, setIsPaymentStart] = useState(false);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  console.log(currentSelectedAddress, "cartItems");
-
+  // Calculate the total cart amount
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
       ? cartItems.items.reduce(
           (sum, currentItem) =>
             sum +
-            (currentItem?.salePrice > 0
+            ((currentItem?.salePrice > 0
               ? currentItem?.salePrice
-              : currentItem?.price) *
-              currentItem?.quantity,
+              : currentItem?.price) * currentItem?.quantity),
           0
         )
       : 0;
 
+  // Handle PayPal payment initiation
   function handleInitiatePaypalPayment() {
-    if (cartItems.length === 0) {
+    if (!cartItems || cartItems.items.length === 0) {
       toast({
-        title: "Your cart is empty. Please add items to proceed",
+        title: "Your cart is empty. Please add items to proceed.",
         variant: "destructive",
       });
-
       return;
     }
-    if (currentSelectedAddress === null) {
+    if (!currentSelectedAddress) {
       toast({
         title: "Please select one address to proceed.",
         variant: "destructive",
       });
-
       return;
     }
 
@@ -82,46 +79,66 @@ function ShoppingCheckout() {
     };
 
     dispatch(createNewOrder(orderData)).then((data) => {
-      console.log(data, "sangam");
       if (data?.payload?.success) {
-        setIsPaymemntStart(true);
+        setIsPaymentStart(true);
       } else {
-        setIsPaymemntStart(false);
+        setIsPaymentStart(false);
       }
     });
   }
 
-  if (approvalURL) {
-    window.location.href = approvalURL;
+  // Redirect to PayPal approval URL if available
+  useEffect(() => {
+    if (approvalURL) {
+      window.location.href = approvalURL;
+    }
+  }, [approvalURL]);
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
   return (
     <div className="flex flex-col">
+      {/* Header Section */}
       <div className="relative h-[300px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
+
+      {/* Main Content */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
+        {/* Address Selection */}
         <Address
           selectedId={currentSelectedAddress}
           setCurrentSelectedAddress={setCurrentSelectedAddress}
         />
+
+        {/* Cart Items and Payment */}
         <div className="flex flex-col gap-4">
-          {cartItems && cartItems.items && cartItems.items.length > 0
-            ? cartItems.items.map((item) => (
-                <UserCartItemsContent cartItem={item} />
-              ))
-            : null}
+          {cartItems && cartItems.items && cartItems.items.length > 0 ? (
+            cartItems.items.map((item, index) => (
+              <UserCartItemsContent key={index} cartItem={item} />
+            ))
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
           <div className="mt-8 space-y-4">
+            {/* Total Amount */}
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
+              <span className="font-bold">${totalCartAmount.toFixed(2)}</span>
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button onClick={handleInitiatePaypalPayment} className="w-full">
+            {/* Checkout Button */}
+            <Button
+              onClick={handleInitiatePaypalPayment}
+              className="w-full"
+              disabled={isPaymentStart}
+            >
               {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
+                ? "Processing PayPal Payment..."
+                : "Checkout with PayPal"}
             </Button>
           </div>
         </div>

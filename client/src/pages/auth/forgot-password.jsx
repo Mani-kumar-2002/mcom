@@ -15,7 +15,7 @@ function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "https://mcom-backend.onrender.com/api/auth/forgot-password",
+        "http://localhost:5001/api/auth/forgot-password",
         { email }
       );
 

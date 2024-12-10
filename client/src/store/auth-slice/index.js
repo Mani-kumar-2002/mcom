@@ -27,7 +27,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "https://mcom-backend.onrender.com/api/auth/login",
+      "http://localhost:5001/api/auth/login",
       formData,
       {
         withCredentials: true,
@@ -43,7 +43,7 @@ export const logoutUser = createAsyncThunk(
 
   async () => {
     const response = await axios.post(
-      "https://mcom-backend.onrender.com/api/auth/logout",
+      "http://localhost:5001/api/auth/logout",
       {},
       {
         withCredentials: true,
@@ -59,7 +59,7 @@ export const checkAuth = createAsyncThunk(
 
   async () => {
     const response = await axios.get(
-      "https://mcom-backend.onrender.com/api/auth/check-auth",
+      "http://localhost:5001/api/auth/check-auth",
       {
         withCredentials: true,
         headers: {
